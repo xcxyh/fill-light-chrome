@@ -28,6 +28,11 @@ class ColorSettings {
     togglePanel(show) {
         this.settingsPanel.style.display = show ? 'block' : 'none';
         this.settingsButton.style.display = show ? 'none' : 'block';
+
+        // 当打开面板时，同步颜色选择器
+        if (show) {
+            this.syncColorPickerWithBackground();
+        }
     }
 
     updateBackground(color) {
@@ -52,6 +57,93 @@ class ColorSettings {
             this.togglePanel(false);
         }
     }
+}
+
+function syncColorPickerWithBackground() {
+    const currentColor = this.getCurrentBackgroundColor();
+
+    // 更新颜色选择器显示
+    document.getElementById('hexValue').textContent = currentColor;
+
+    // 转换为 RGB
+    const r = parseInt(currentColor.slice(1, 3), 16);
+    const g = parseInt(currentColor.slice(3, 5), 16);
+    const b = parseInt(currentColor.slice(5, 7), 16);
+
+    // 转换为 HSL
+    const hsl = this.rgbToHsl(r, g, b);
+
+    // 更新全局变量
+    currentHue = hsl[0];
+    currentSaturation = hsl[1];
+    currentLightness = hsl[2];
+
+    // 更新滑块位置
+    document.getElementById('hueSlider').value = hsl[0];
+    document.getElementById('lightnessSlider').value = hsl[2];
+
+    // 更新颜色区域
+    updateColorArea();
+    updateLightnessSlider();
+
+    // 更新指针位置
+    setTimeout(() => {
+        const colorArea = document.getElementById('colorArea');
+        const pointer = document.querySelector('.color-pointer');
+        const rect = colorArea.getBoundingClientRect();
+
+        const x = (hsl[1] / 100) * rect.width;
+        const y = (1 - hsl[2] / 100) * rect.height;
+
+        pointer.style.left = `${x}px`;
+        pointer.style.top = `${y}px`;
+
+        updateColor(x, y);
+    }, 100);
+}
+
+function getCurrentBackgroundColor() {
+    // 获取当前背景色
+    const bgColor = document.body.style.backgroundColor;
+
+    // 如果是 rgb 格式，转换为 hex
+    if (bgColor.startsWith('rgb')) {
+        const rgb = bgColor.match(/\d+/g);
+        if (rgb) {
+            const hex = '#' + rgb.map(x => {
+                const hex = parseInt(x).toString(16);
+                return hex.length === 1 ? '0' + hex : hex;
+            }).join('').toUpperCase();
+            return hex;
+        }
+    }
+
+    return bgColor || '#FC9595'; // 如果没有背景色，返回默认色
+}
+
+function rgbToHsl(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
 }
 
 // 初始化
@@ -206,11 +298,13 @@ updateColorArea();
 // 替换原有的设置按钮点击事件
 document.getElementById('settingsButton').addEventListener('click', function () {
     const settingsPanel = document.getElementById('settingsPanel');
-    // 切换显示/隐藏状态
-    if (settingsPanel.classList.contains('show')) {
-        settingsPanel.classList.remove('show');
-    } else {
+    const isShowing = !settingsPanel.classList.contains('show');
+
+    if (isShowing) {
         settingsPanel.classList.add('show');
+        syncColorPickerWithBackground();
+    } else {
+        settingsPanel.classList.remove('show');
     }
 });
 
@@ -264,3 +358,55 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedColor = getCurrentBackgroundColor();
     setBackgroundColor(savedColor);
 });
+
+// 页面加载完成后初始化颜色
+document.addEventListener('DOMContentLoaded', function () {
+    const initialColor = '#FC9595';
+
+    // 设置背景色
+    document.body.style.backgroundColor = initialColor;
+
+    // 更新颜色选择器显示
+    document.getElementById('hexValue').textContent = initialColor;
+
+    // 将十六进制颜色转换为 HSL 并更新滑块
+    const r = parseInt(initialColor.slice(1, 3), 16);
+    const g = parseInt(initialColor.slice(3, 5), 16);
+    const b = parseInt(initialColor.slice(5, 7), 16);
+
+    // 转换 RGB 为 HSL
+    const hsl = rgbToHsl(r, g, b);
+
+    // 更新滑块位置
+    document.getElementById('hueSlider').value = hsl[0];
+    document.getElementById('lightnessSlider').value = hsl[2];
+
+    // 更新颜色区域
+    updateColorArea(hsl[0]);
+});
+
+// RGB 转 HSL 的辅助函数
+function rgbToHsl(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0;
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+            case g: h = (b - r) / d + 2; break;
+            case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+    }
+
+    return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+}
