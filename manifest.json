@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Fill Light Extension",
+    "name": "小猫补光灯",
     "version": "1.0.0",
-    "description": "A simple fill light extension for Chrome",
+    "description": "一款极简的自拍补光浏览器插件",
     "permissions": [
         "activeTab",
         "storage"
