@@ -337,13 +337,6 @@ lightnessSlider.addEventListener('input', (e) => {
     document.body.style.backgroundColor = hex;
 });
 
-// 初始化时加载保存的颜色
-chrome.storage.local.get(['fillColor'], (result) => {
-    if (result.fillColor) {
-        document.body.style.backgroundColor = result.fillColor;
-    }
-});
-
 // 初始化
 updateColorArea();
 
