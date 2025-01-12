@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fill Light Preview</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <button id="settingsButton" class="settings-button">设置</button>
+    <button id="fullscreenButton" class="fullscreen-button">全屏</button>
+
+    <div id="settingsPanel" class="settings-panel modal">
+        <div class="modal-content">
+            <button id="closeButton" class="close-button">关闭</button>
+            <h3>颜色设置</h3>
+            <div class="color-picker-container">
+                <div class="color-area" id="colorArea">
+                    <div class="color-pointer"></div>
+                </div>
+                <div class="slider-container">
+                    <input type="range" id="hueSlider" min="0" max="360" value="0" class="hue-slider">
+                    <input type="range" id="lightnessSlider" min="0" max="100" value="50" class="lightness-slider">
+                </div>
+                <div class="color-value">
+                    <span id="hexValue">#FFFFFF</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
