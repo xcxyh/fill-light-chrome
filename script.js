@@ -11,6 +11,7 @@ class ColorSettings {
         this.closeButton = document.querySelector('.close-button');
         this.colorPicker = document.getElementById('colorPicker');
         this.preview = document.getElementById('colorPreview');
+        this.fullscreenButton = document.getElementById('fullscreenButton');
     }
 
     initEventListeners() {
@@ -22,8 +23,16 @@ class ColorSettings {
     }
 
     togglePanel(show) {
-        this.settingsPanel.style.display = show ? 'block' : 'none';
-        this.settingsButton.style.display = show ? 'none' : 'block';
+        if (this.settingsPanel) {
+            this.settingsPanel.style.display = show ? 'block' : 'none';
+        }
+        if (this.settingsButton) {
+            this.settingsButton.style.display = show ? 'none' : 'block';
+        }
+        // 处理全屏按钮的显示状态
+        if (this.fullscreenButton) {
+            this.fullscreenButton.style.display = show ? 'none' : 'flex';
+        }
 
         // 当打开面板时，同步颜色选择器
         if (show) {
@@ -47,10 +56,15 @@ class ColorSettings {
     }
 
     handleOutsideClick(e) {
-        if (!this.settingsPanel.contains(e.target) &&
+        if (this.settingsPanel &&
+            !this.settingsPanel.contains(e.target) &&
             e.target !== this.settingsButton &&
             this.settingsPanel.style.display === 'block') {
             this.togglePanel(false);
+            // 显示全屏按钮
+            if (this.fullscreenButton) {
+                this.fullscreenButton.style.display = 'flex';
+            }
         }
     }
 
@@ -74,6 +88,7 @@ class ColorSettings {
 
                 // 更新颜色选择器的状态
                 this.updateColorPickerState(color);
+                syncColorPickerWithBackground();
             });
         });
     }
@@ -189,6 +204,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const settingsButton = document.getElementById('settingsButton');
     const settingsPanel = document.getElementById('settingsPanel');
     const closeButton = settingsPanel.querySelector('.close-button');
+    const fullscreenButton = document.getElementById('fullscreenButton');
 
     // 打开设置面板
     settingsButton.addEventListener('click', function () {
@@ -208,6 +224,8 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('click', function (event) {
         if (event.target === settingsPanel) {
             settingsPanel.classList.remove('active');
+            fullscreenButton.style.display = 'flex';
+            settingsButton.style.display = 'block';
         }
     });
 });
@@ -352,13 +370,9 @@ window.addEventListener('click', function (event) {
 });
 
 // 获取关闭按钮和设置面板元素
-const closeButton = document.getElementById('closeButton');
+const closeButton = document.getElementById('.closeButton');
 const settingsPanel = document.getElementById('settingsPanel');
 
-// 添加关闭按钮点击事件
-closeButton.addEventListener('click', () => {
-    settingsPanel.style.display = 'none';
-});
 
 const fullscreenButton = document.getElementById('fullscreenButton');
 const settingsButton = document.getElementById('settingsButton');
