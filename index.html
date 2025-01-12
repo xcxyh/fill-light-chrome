@@ -13,20 +13,39 @@
 
     <div id="settingsPanel" class="settings-panel modal">
         <div class="modal-content">
-            <button id="closeButton" class="close-button">关闭</button>
-            <h3>颜色设置</h3>
-            <div class="color-picker-container">
-                <div class="color-area" id="colorArea">
-                    <div class="color-pointer"></div>
+            <div class="settings-layout">
+                <!-- 左侧颜色选择器 -->
+                <div class="color-picker-section">
+                    <h3>颜色设置</h3>
+                    <div class="color-picker-container">
+                        <div class="color-area" id="colorArea">
+                            <div class="color-pointer"></div>
+                        </div>
+                        <div class="slider-container">
+                            <input type="range" id="hueSlider" min="0" max="360" value="0" class="hue-slider">
+                            <input type="range" id="lightnessSlider" min="0" max="100" value="50"
+                                class="lightness-slider">
+                        </div>
+                        <div class="color-value">
+                            <span id="hexValue">#FFFFFF</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="slider-container">
-                    <input type="range" id="hueSlider" min="0" max="360" value="0" class="hue-slider">
-                    <input type="range" id="lightnessSlider" min="0" max="100" value="50" class="lightness-slider">
-                </div>
-                <div class="color-value">
-                    <span id="hexValue">#FFFFFF</span>
+
+                <!-- 右侧推荐颜色列表 -->
+                <div class="recommended-colors-section">
+                    <h3>推荐颜色</h3>
+                    <div class="color-cards">
+                        <div class="color-card" data-color="#FC9797" style="background-color: #FC9797;"></div>
+                        <div class="color-card" data-color="#C6FC97" style="background-color: #C6FC97;"></div>
+                        <div class="color-card" data-color="#97FCFC" style="background-color: #97FCFC;"></div>
+                        <div class="color-card" data-color="#979EFC" style="background-color: #979EFC;"></div>
+                        <div class="color-card" data-color="#F897FC" style="background-color: #F897FC;"></div>
+                        <div class="color-card" data-color="#FFFFFF" style="background-color: #FFFFFF;"></div>
+                    </div>
                 </div>
             </div>
+            <button id="closeButton" class="close-button">关闭</button>
         </div>
     </div>
 

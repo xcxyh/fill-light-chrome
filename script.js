@@ -2,7 +2,7 @@ class ColorSettings {
     constructor() {
         this.initElements();
         this.initEventListeners();
-        this.loadInitialColor();
+        this.initRecommendedColors();
     }
 
     initElements() {
@@ -17,10 +17,6 @@ class ColorSettings {
         // 设置面板的显示和隐藏
         this.settingsButton.addEventListener('click', () => this.togglePanel(true));
         this.closeButton.addEventListener('click', () => this.togglePanel(false));
-
-        // 颜色选择器事件
-        this.colorPicker.addEventListener('input', (e) => this.updateBackground(e.target.value));
-
         // 点击面板外关闭
         document.addEventListener('click', (e) => this.handleOutsideClick(e));
     }
@@ -31,7 +27,7 @@ class ColorSettings {
 
         // 当打开面板时，同步颜色选择器
         if (show) {
-            this.syncColorPickerWithBackground();
+            syncColorPickerWithBackground();
         }
     }
 
@@ -55,6 +51,44 @@ class ColorSettings {
             e.target !== this.settingsButton &&
             this.settingsPanel.style.display === 'block') {
             this.togglePanel(false);
+        }
+    }
+
+    initRecommendedColors() {
+        const colorCards = document.querySelectorAll('.color-card');
+        console.log('Found color cards:', colorCards.length);  // 调试日志
+
+        colorCards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                const color = e.target.dataset.color;
+                console.log('Clicked color:', color);  // 调试日志
+
+                // 直接更新背景色
+                document.body.style.backgroundColor = color;
+
+                // 更新十六进制显示
+                const hexValueElement = document.getElementById('hexValue');
+                if (hexValueElement) {
+                    hexValueElement.textContent = color;
+                }
+
+                // 更新颜色选择器的状态
+                this.updateColorPickerState(color);
+            });
+        });
+    }
+
+    updateColorPickerState(hexColor) {
+        // 将十六进制转换为 RGB
+        const r = parseInt(hexColor.slice(1, 3), 16);
+        const g = parseInt(hexColor.slice(3, 5), 16);
+        const b = parseInt(hexColor.slice(5, 7), 16);
+
+        // 更新颜色选择器的状态
+        // 这里需要根据你的具体实现来调整
+        const colorArea = document.getElementById('colorArea');
+        if (colorArea) {
+            colorArea.style.backgroundColor = hexColor;
         }
     }
 }

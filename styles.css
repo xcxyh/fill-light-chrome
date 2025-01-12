@@ -131,10 +131,11 @@ body {
     margin: 0;
     padding: 30px;
     width: 100%;
-    height: 50vh;
     position: relative;
     color: white;
     border-radius: 16px;
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-content h3 {
@@ -144,19 +145,19 @@ body {
 }
 
 .close-button {
-    position: absolute;
-    right: 30px;
-    top: 30px;
-    padding: 8px 16px;
-    background-color: #333333;
-    border: none;
-    border-radius: 8px;
-    color: white;
+    margin-top: 20px;
+    padding: 8px 20px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background: #f5f5f5;
     cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .close-button:hover {
-    background-color: #444444;
+    background: #e5e5e5;
 }
 
 .fullscreen-button {
@@ -176,4 +177,40 @@ body {
 
 .fullscreen-button:hover {
     background-color: #45a049;
+}
+
+/* 颜色设置面板布局 */
+.settings-layout {
+    display: flex;
+    gap: 20px;
+}
+
+.color-picker-section {
+    flex: 1;
+}
+
+.recommended-colors-section {
+    width: 200px;
+    padding: 0 20px;
+    border-left: 1px solid #ccc;
+}
+
+/* 推荐颜色卡片样式 */
+.color-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-card {
+    width: 100%;
+    height: 40px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s;
+    border: 1px solid #ccc;
+}
+
+.color-card:hover {
+    transform: scale(1.05);
 }
